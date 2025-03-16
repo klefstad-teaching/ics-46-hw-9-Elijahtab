@@ -35,7 +35,6 @@ struct Edge {
         return out << "(" << e.src << "," << e.dst << "," << e.weight << ")";
     }
 };
-
 struct Graph {
     int numVertices;
     vector<vector<Edge>> adjacencyList;
@@ -52,30 +51,29 @@ struct Graph {
     Graph() : numVertices(0) {}
 
     void addEdge(int u, int v, int weight, bool isUndirected = true) {
-        bool found = false;
-        for (auto& e : adjacencyList[u]) {
-            if (e.dst == v) {
-                found = true;
+        for (auto it = adjacencyList[u].begin(); it != adjacencyList[u].end(); ++it) {
+            if (it->dst == v) {
+                adjacencyList[u].erase(it);
                 break;
             }
         }
-        if (!found) adjacencyList[u].push_back(Edge(u, v, weight));
+        adjacencyList[u].push_back(Edge(u, v, weight));
 
         if (isUndirected) {
-            found = false;
-            for (auto& e : adjacencyList[v]) {
-                if (e.dst == u) {
-                    found = true;
+            for (auto it = adjacencyList[v].begin(); it != adjacencyList[v].end(); ++it) {
+                if (it->dst == u) {
+                    adjacencyList[v].erase(it);
                     break;
                 }
             }
-            if (!found) adjacencyList[v].push_back(Edge(v, u, weight));
+            adjacencyList[v].push_back(Edge(v, u, weight));
         }
     }
 
     auto begin() { return adjacencyList.begin(); }
-    auto end() { return adjacencyList.end(); }
+    auto end()   { return adjacencyList.end(); }
 };
+
 
 inline istream& operator>>(istream& in, Graph& G) {
     if (!(in >> G.numVertices)) {
