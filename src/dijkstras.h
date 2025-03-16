@@ -46,6 +46,7 @@ struct Graph {
         previous.resize(n, -1);
         visited.resize(n, false);
     }
+    Graph() : numVertices(0) {}  
 
     void addEdge(int u, int v, int weight, bool isUndirected = true) {
         adjacencyList[u].push_back({v, weight});
