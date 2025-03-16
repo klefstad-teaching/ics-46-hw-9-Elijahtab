@@ -52,9 +52,24 @@ struct Graph {
     Graph() : numVertices(0) {}
 
     void addEdge(int u, int v, int weight, bool isUndirected = true) {
-        adjacencyList[u].push_back(Edge(u, v, weight));
+        bool found = false;
+        for (auto& e : adjacencyList[u]) {
+            if (e.dst == v) {
+                found = true;
+                break;
+            }
+        }
+        if (!found) adjacencyList[u].push_back(Edge(u, v, weight));
+
         if (isUndirected) {
-            adjacencyList[v].push_back(Edge(v, u, weight));
+            found = false;
+            for (auto& e : adjacencyList[v]) {
+                if (e.dst == u) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) adjacencyList[v].push_back(Edge(v, u, weight));
         }
     }
 
@@ -77,16 +92,17 @@ inline istream& operator>>(istream& in, Graph& G) {
 }
 
 inline void file_to_graph(const string& filename, Graph& G) {
-    ifstream in(filename);
-    if (!in) {
+    ifstream file(filename);
+    if (!file) {
         throw runtime_error("Can't open input file: " + filename);
     }
-    in >> G;
-    in.close();
+    file >> G;
+    file.close();
 }
 
 vector<int> dijkstra_shortest_path(Graph& G, int source, vector<int>& previous);
 vector<int> extract_shortest_path(const vector<int>& dist, const vector<int>& prev, int destination);
+
 void print_path(const vector<int>& path, int total);
 
-#endif // DIJKSTRAS_H
+#endif
