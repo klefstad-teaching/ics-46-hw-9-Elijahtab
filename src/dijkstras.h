@@ -40,6 +40,8 @@ struct Graph {
     vector<int> previous;
     vector<bool> visited;
 
+    Graph() : numVertices(0) {} 
+
     Graph(int n) : numVertices(n) {
         adjacencyList.resize(n);
         distance.resize(n, INF);
