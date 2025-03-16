@@ -63,5 +63,5 @@ void print_path(const vector<int>& path, int total)
         cout << path[i] << " ";
 
     }
-    cout << "\nTotal distance: " << total << "\n";
+    cout << "\nTotal cost: " << total << "\n";
 }
