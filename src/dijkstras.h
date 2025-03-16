@@ -4,10 +4,19 @@
 #include <queue>
 #include <limits>
 #include <stack>
+#include <list>
 
 using namespace std;
 
 constexpr int INF = numeric_limits<int>::max();
+
+struct Node {
+    int vertex;
+    int weight;
+    bool operator>(const Node& other) const {
+        return weight > other.weight;  // Min-heap (smallest weight first)
+    }
+};
 
 struct Edge {
     int src=0;
@@ -24,19 +33,39 @@ struct Edge {
         return out << "(" << e.src << "," << e.dst << "," << e.weight << ")";
     }
 };
+struct Graph {
+    int numVertices;
+    vector<list<Node>> adjacencyList;  
+    vector<int> distance;              
+    vector<int> previous;             
+    vector<bool> visited;
 
-struct Graph : public vector<vector<Edge>> {
-    int numVertices=0;
+    Graph(int n) : numVertices(n) {
+        adjacencyList.resize(n);
+        distance.resize(n, INF);
+        previous.resize(n, -1);
+        visited.resize(n, false);
+    }
+
+    void addEdge(int u, int v, int weight, bool isUndirected = true) {
+        adjacencyList[u].push_back({v, weight});
+        if (isUndirected) {
+            adjacencyList[v].push_back({u, weight});
+        }
+    }
 };
 
 inline istream& operator>>(istream& in, Graph& G) {
     if (!(in >> G.numVertices))
         throw runtime_error("Unable to find input file");
-    G.resize(G.numVertices);
-    for (Edge e; in >> e;)
-        G[e.src].push_back(e);
+
+    G.adjacencyList.resize(G.numVertices);
+    for (Edge e; in >> e;) {
+        G.addEdge(e.src, e.dst, e.weight, true);
+    }
     return in;
 }
+
 
 inline void file_to_graph(const string& filename, Graph& G) {
     ifstream in(filename);
@@ -47,6 +76,6 @@ inline void file_to_graph(const string& filename, Graph& G) {
     in.close();
 }
 
-vector<int> dijkstra_shortest_path(const Graph& G, int source, vector<int>& previous);
-vector<int> extract_shortest_path(const vector<int>& /*distances*/, const vector<int>& previous, int destination);
+vector<int> dijkstra_shortest_path(Graph& G, int source, vector<int>& previous);
+vector<int> extract_shortest_path(const vector<int>& distances, const vector<int>& previous, int destination);
 void print_path(const vector<int>& v, int total);
