@@ -26,14 +26,15 @@ vector<string> generate_word_ladder(const string& begin_word, const string& end_
         string last_word = ladder.back();
         for(auto word : word_list){
             if(is_adjacent(last_word, word)){
-                if(visited.count(word) == 0){
-                    visited.insert(word);
+                if (visited.count(word) == 0) {
+                    visited.insert(word); 
                     vector<string> new_ladder = ladder;
                     new_ladder.push_back(word);
-                    if(word == end_word)
+                    if (word == end_word)
                         return new_ladder;
                     ladder_queue.push(new_ladder);
                 }
+                
             }
         }
     }
@@ -72,7 +73,7 @@ bool is_adjacent(const string& word1, const string& word2){
         return false;
     }
     
-    return word_test == word2;
+    return word1 == word2;
 }
 
 void load_words(set<string> & word_list, const string& file_name) {
@@ -96,7 +97,7 @@ void print_word_ladder(const vector<string>& ladder) {
     
     cout << "Word Ladder: ";
     for (size_t i = 0; i < ladder.size(); i++) {
-        if (i > 0) cout << " -> ";
+        if (i > 0) cout << " ";
         cout << ladder[i];
     }
     cout << endl;
@@ -117,6 +118,29 @@ void error(string word1, string word2, string msg) {
     cerr << msg << word2 << word1 << endl;
 }
 
-bool edit_distance_within(const std::string& str1, const std::string& str2, int d){
-    return false;
+bool edit_distance_within(const std::string& str1, const std::string& str2, int d) {
+    int len1 = str1.size(), len2 = str2.size();
+    
+    if (std::abs(len1 - len2) > d) return false;
+
+
+    std::vector<std::vector<int>> dp(len1 + 1, std::vector<int>(len2 + 1, 0));
+
+    for (int i = 0; i <= len1; ++i) dp[i][0] = i;
+    for (int j = 0; j <= len2; ++j) dp[0][j] = j;
+
+    for (int i = 1; i <= len1; ++i) {
+        for (int j = 1; j <= len2; ++j) {
+            if (str1[i - 1] == str2[j - 1]) {
+                dp[i][j] = dp[i - 1][j - 1];  
+            } else {
+                dp[i][j] = std::min({dp[i - 1][j] + 1,     
+                                     dp[i][j - 1] + 1,     
+                                     dp[i - 1][j - 1] + 1}
+                                   );
+            }
+        }
+    }
+
+    return dp[len1][len2] <= d;
 }
