@@ -35,9 +35,9 @@ struct Edge {
 };
 struct Graph {
     int numVertices;
-    vector<list<Node>> adjacencyList;  
-    vector<int> distance;              
-    vector<int> previous;             
+    vector<list<Node>> adjacencyList;
+    vector<int> distance;
+    vector<int> previous;
     vector<bool> visited;
 
     Graph(int n) : numVertices(n) {
@@ -54,6 +54,7 @@ struct Graph {
         }
     }
 };
+
 
 inline istream& operator>>(istream& in, Graph& G) {
     if (!(in >> G.numVertices))
