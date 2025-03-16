@@ -1,37 +1,33 @@
-#include <iostream>
 #include "dijkstras.h"
 
-using namespace std;
-
 int main() {
-    int numVertices = 6;
-    Graph graph(numVertices);
+    Graph G;
 
-    graph.addEdge(0, 1, 4);
-    graph.addEdge(0, 2, 2);
-    graph.addEdge(1, 2, 5);
-    graph.addEdge(1, 3, 10);
-    graph.addEdge(2, 3, 3);
-    graph.addEdge(3, 4, 7);
-    graph.addEdge(4, 5, 1);
-    graph.addEdge(3, 5, 8);
-
-    int source = 0;
-
-    vector<int> previous(graph.numVertices, -1);  
-
-    vector<int> distances = dijkstra_shortest_path(graph, source, previous);
-
-    cout << "Shortest distances from vertex " << source << ":\n";
-    for (int i = 0; i < numVertices; i++) {
-        if (distances[i] == INF)
-            cout << "Vertex " << i << ": No path\n";
-        else
-            cout << "Vertex " << i << ": " << distances[i] << "\n";
+    // Load the graph from the file
+    try {
+        file_to_graph("/Users/elijahtabachnik/Desktop/Github/School/ics-46-hw-9-Elijahtab/src/medium.txt", G);
+    } catch (const runtime_error& e) {
+        cerr << "Error: " << e.what() << endl;
+        return 1;
     }
 
+    // Run Dijkstra from vertex 0
+    int source = 0;
+    vector<int> previous;
+    vector<int> distances = dijkstra_shortest_path(G, source, previous);
+
+    // Print distances
+    cout << "Shortest distances from vertex " << source << ":\n";
+    for (int i = 0; i < G.numVertices; i++) {
+        cout << "Vertex " << i << ": ";
+        if (distances[i] == INF) cout << "No path";
+        else cout << distances[i];
+        cout << "\n";
+    }
+
+    // Print paths
     cout << "\nShortest paths from vertex " << source << ":\n";
-    for (int i = 0; i < numVertices; i++) {
+    for (int i = 0; i < G.numVertices; i++) {
         vector<int> path = extract_shortest_path(distances, previous, i);
         print_path(path, distances[i]);
     }
