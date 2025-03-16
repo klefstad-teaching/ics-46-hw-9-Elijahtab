@@ -7,8 +7,14 @@
 #include <stack>
 
 vector<string> generate_word_ladder(const string& begin_word, const string& end_word, const set<string>& word_list){
-    if(begin_word == end_word) error(begin_word, end_word, "The words are the same");
-    if(word_list.count(end_word) == 0) error(begin_word, " ", "The begin word is not a valid word");
+    if(begin_word == end_word) {
+        error(begin_word, end_word, "The words are the same");
+        return {};
+    }
+    if(word_list.count(end_word) == 0) {
+        error(begin_word, " ", "The begin word is not a valid word");
+        return {};
+    }
     queue<vector<string>> ladder_queue;
     ladder_queue.push({begin_word});
     set<string> visited;
