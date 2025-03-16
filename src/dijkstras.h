@@ -40,8 +40,6 @@ struct Graph {
     vector<int> previous;
     vector<bool> visited;
 
-    Graph() : numVertices(0) {} 
-
     Graph(int n) : numVertices(n) {
         adjacencyList.resize(n);
         distance.resize(n, INF);
@@ -55,7 +53,11 @@ struct Graph {
             adjacencyList[v].push_back({u, weight});
         }
     }
+
+    auto begin() { return adjacencyList.begin(); }
+    auto end() { return adjacencyList.end(); }
 };
+
 
 
 inline istream& operator>>(istream& in, Graph& G) {
